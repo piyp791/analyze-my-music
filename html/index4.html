@@ -1,0 +1,305 @@
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+
+    <style>
+
+        * {
+          -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+        .parent { 
+          max-width: 1500px; 
+          width: 100%; 
+          margin: 0 auto;
+          border: 1px solid black;
+          border-radius: 10px;
+          padding: 5px;
+        }
+        .row { 
+          width: 100%;
+          max-width: 1500px; 
+          letter-spacing: -0.31em;
+        }
+        .col1, .col2, .col3 { 
+          display: inline-block;
+          vertical-align: top;
+          text-align: center;
+          border: 1px solid black;
+          /*background: #ccc;*/
+          padding: 5px;
+          margin: 5px 0.5%;
+          letter-spacing: normal;
+        }
+        .col1 {
+          width: 32%;
+        }
+        .col2 {
+          width: 32%;
+        }
+        .col3 {
+          width: 32%;
+        }
+
+        .bar rect {
+          fill: steelblue;
+        }
+
+        .bar text {
+          fill: #fff;
+          font: 10px sans-serif;
+        }
+    </style>>
+    <body>
+
+
+
+        <div class="parent">
+            <div class="row">
+              <div class="col1"><h3>Danceability</h3>
+              </div>
+              <div class="col2">
+                  <h3>Energy</h3>
+              </div>
+              <div class="col3">
+                  <h3>Key</h3>
+               </div>
+            </div>
+            <div class="row">
+              <div class="col1">
+                   <svg id="danceability" width="400" height="400"></svg>
+              </div>
+              <div class="col2">
+                   <svg id="energy" width="400" height="400"></svg>
+              </div>
+              <div class="col3">
+                    <svg id="key" width="400" height="400"></svg>
+               </div>
+            </div>
+             <div class="row">
+              <div class="col1"><h3>Loudness</h3>
+              </div>
+              <div class="col2">
+                  <h3>Mode</h3>
+              </div>
+              <div class="col3">
+                  <h3>Speechiness</h3>
+               </div>
+            </div>
+            <div class="row">
+              <div class="col1">
+                    <svg id="loudness" width="400" height="400"></svg>  
+              </div>
+              <div class="col2">
+                    <svg id="mode" width="400" height="400"></svg> 
+              </div>
+              <div class="col3">
+                  <svg id="speechiness" width="400" height="400"></svg> 
+              </div>
+            </div>
+             <div class="row">
+              <div class="col1"><h3>Acousticness</h3>
+              </div>
+              <div class="col2">
+                  <h3>Instrumentalness</h3>
+              </div>
+              <div class="col3">
+                  <h3>Liveness</h3>
+               </div>
+            </div>
+
+            <div class="row">
+              <div class="col1">
+                  <svg id="acousticness" width="400" height="400"></svg> 
+              </div>
+              <div class="col2">
+                  <svg id="instrumentalness" width="400" height="400"></svg> 
+              </div>
+              <div class="col3">
+                  <svg id="liveness" width="400" height="400"></svg> 
+              </div>
+            </div>
+
+             <div class="row">
+              <div class="col1"><h3>Valence</h3>
+              </div>
+              <div class="col2">
+                  <h3>Tempo</h3>
+              </div>
+              <div class="col3">
+                  <h3>Time signature</h3>
+               </div>
+            </div>
+            <div class="row">
+              <div class="col1">
+                  <svg id="valence" width="400" height="400"></svg> 
+              </div>
+              <div class="col2">
+                  <svg id="tempo" width="400" height="400"></svg> 
+              </div>
+              <div class="col3">
+                  <svg id="time_signature" width="400" height="400"></svg> 
+              </div>
+            </div>
+        </div>
+
+
+<script type="text/javascript">
+
+   data = {"though i know tajdar junaid":{"danceability":0.632,"energy":0.371,"key":5,"loudness":-11.62,"mode":1,"speechiness":0.0269,"acousticness":0.575,"instrumentalness":0.0111,"liveness":0.0785,"valence":0.439,"tempo":81.996,"time_signature":4},"unforgettable french montana":{"danceability":0.726,"energy":0.769,"key":6,"loudness":-5.043,"mode":1,"speechiness":0.123,"acousticness":0.0293,"instrumentalness":0.0101,"liveness":0.104,"valence":0.75,"tempo":97.985,"time_signature":4},"more than gravity colin & caroline":{"danceability":0.62,"energy":0.468,"key":4,"loudness":-9.648,"mode":1,"speechiness":0.0268,"acousticness":0.715,"instrumentalness":0.0000393,"liveness":0.106,"valence":0.205,"tempo":110.969,"time_signature":4},"where's my love - acoustic syml":{"danceability":0.554,"energy":0.226,"key":3,"loudness":-11.323,"mode":1,"speechiness":0.0281,"acousticness":0.891,"instrumentalness":0.0321,"liveness":0.107,"valence":0.233,"tempo":104.005,"time_signature":4},"dare you hardwell":{"danceability":0.456,"energy":0.89,"key":9,"loudness":-4.304,"mode":1,"speechiness":0.0463,"acousticness":0.0169,"instrumentalness":0,"liveness":0.0901,"valence":0.182,"tempo":127.894,"time_signature":4},"magnetised tom odell":{"danceability":0.487,"energy":0.0746,"key":10,"loudness":-12.952,"mode":0,"speechiness":0.0327,"acousticness":0.952,"instrumentalness":0,"liveness":0.108,"valence":0.131,"tempo":106.328,"time_signature":4},"fly away with me tom walker":{"danceability":0.421,"energy":0.499,"key":5,"loudness":-8.869,"mode":1,"speechiness":0.173,"acousticness":0.61,"instrumentalness":0,"liveness":0.0875,"valence":0.293,"tempo":78.621,"time_signature":4},"automatic castro":{"danceability":0.626,"energy":0.601,"key":2,"loudness":-6.4,"mode":1,"speechiness":0.0309,"acousticness":0.266,"instrumentalness":0.00405,"liveness":0.112,"valence":0.187,"tempo":120.046,"time_signature":4},"another love - Zwette Edit tom odell":{"danceability":0.87,"energy":0.554,"key":4,"loudness":-5.828,"mode":0,"speechiness":0.0635,"acousticness":0.0802,"instrumentalness":0.0739,"liveness":0.115,"valence":0.467,"tempo":123.998,"time_signature":4},"re-arrange biffy clyro":{"danceability":0.634,"energy":0.746,"key":4,"loudness":-8.574,"mode":1,"speechiness":0.0352,"acousticness":0.0601,"instrumentalness":0.0000151,"liveness":0.103,"valence":0.509,"tempo":134.048,"time_signature":4},"changing of the seasons two door cinema club":{"danceability":0.537,"energy":0.882,"key":2,"loudness":-4.429,"mode":1,"speechiness":0.155,"acousticness":0.0000472,"instrumentalness":0.000351,"liveness":0.103,"valence":0.553,"tempo":129.972,"time_signature":4},"escape electric joy ride":{"danceability":0.564,"energy":0.569,"key":6,"loudness":-8.146,"mode":0,"speechiness":0.0326,"acousticness":0.00961,"instrumentalness":0.152,"liveness":0.102,"valence":0.177,"tempo":128.006,"time_signature":4},"grow old with me tom odell":{"danceability":0.474,"energy":0.583,"key":7,"loudness":-7.488,"mode":1,"speechiness":0.0278,"acousticness":0.509,"instrumentalness":0,"liveness":0.25,"valence":0.352,"tempo":146.007,"time_signature":4},"secrets jacob whitesides":{"danceability":0.623,"energy":0.88,"key":0,"loudness":-5.854,"mode":1,"speechiness":0.0515,"acousticness":0.0348,"instrumentalness":0,"liveness":0.0836,"valence":0.577,"tempo":108.005,"time_signature":4},"go do jonsi":{"danceability":0.459,"energy":0.703,"key":4,"loudness":-6.547,"mode":1,"speechiness":0.0439,"acousticness":0.226,"instrumentalness":0.0000972,"liveness":0.642,"valence":0.391,"tempo":140.062,"time_signature":4},"my favourite book stars":{"danceability":0.604,"energy":0.551,"key":1,"loudness":-10.674,"mode":1,"speechiness":0.0697,"acousticness":0.538,"instrumentalness":0.0117,"liveness":0.106,"valence":0.543,"tempo":87.401,"time_signature":4},"goodbye for now juanes":{"danceability":0.829,"energy":0.72,"key":0,"loudness":-6.417,"mode":1,"speechiness":0.0662,"acousticness":0.579,"instrumentalness":0.00519,"liveness":0.0996,"valence":0.658,"tempo":107.942,"time_signature":4},"yesterday the beatles":{"danceability":0.332,"energy":0.179,"key":5,"loudness":-11.83,"mode":1,"speechiness":0.0326,"acousticness":0.879,"instrumentalness":0,"liveness":0.0886,"valence":0.333,"tempo":96.529,"time_signature":4},"starlight muse":{"danceability":0.55,"energy":0.874,"key":4,"loudness":-4.046,"mode":1,"speechiness":0.0321,"acousticness":0.000436,"instrumentalness":0.0000102,"liveness":0.206,"valence":0.329,"tempo":121.61,"time_signature":4},"cole's memories - original mix pyramid":{"danceability":0.573,"energy":0.513,"key":8,"loudness":-11.326,"mode":1,"speechiness":0.0379,"acousticness":0.00457,"instrumentalness":0.79,"liveness":0.0929,"valence":0.0612,"tempo":125.984,"time_signature":4},"break me out the rescues":{"danceability":0.599,"energy":0.708,"key":1,"loudness":-6.068,"mode":1,"speechiness":0.0325,"acousticness":0.0173,"instrumentalness":0.00000203,"liveness":0.12,"valence":0.173,"tempo":135.019,"time_signature":4},"growing old on bleecker street AJR":{"danceability":0.714,"energy":0.449,"key":8,"loudness":-10.816,"mode":1,"speechiness":0.0374,"acousticness":0.828,"instrumentalness":0.0000613,"liveness":0.096,"valence":0.731,"tempo":96.041,"time_signature":4},"black hole sun scott bradlee's postmodern jukebox":{"danceability":0.378,"energy":0.477,"key":0,"loudness":-6.276,"mode":1,"speechiness":0.0373,"acousticness":0.838,"instrumentalness":0,"liveness":0.105,"valence":0.272,"tempo":106.957,"time_signature":4},"say you won't let go james arthur":{"danceability":0.358,"energy":0.557,"key":10,"loudness":-7.398,"mode":1,"speechiness":0.059,"acousticness":0.695,"instrumentalness":0,"liveness":0.0902,"valence":0.475,"tempo":85.043,"time_signature":4},"my arms were always around you peter bradley adams":{"danceability":0.643,"energy":0.436,"key":1,"loudness":-12.245,"mode":1,"speechiness":0.0273,"acousticness":0.724,"instrumentalness":0.459,"liveness":0.11,"valence":0.431,"tempo":91.485,"time_signature":4},"cherry wine hozier":{"danceability":0.415,"energy":0.11,"key":1,"loudness":-14.901,"mode":1,"speechiness":0.0388,"acousticness":0.951,"instrumentalness":0.00236,"liveness":0.0962,"valence":0.224,"tempo":81.876,"time_signature":4},"melatonin (unplugged) phoria":{"danceability":0.54,"energy":0.222,"key":8,"loudness":-12.846,"mode":0,"speechiness":0.0321,"acousticness":0.88,"instrumentalness":0.000587,"liveness":0.346,"valence":0.276,"tempo":128.871,"time_signature":5},"your latest trick dire straits":{"danceability":0.704,"energy":0.408,"key":4,"loudness":-13.558,"mode":1,"speechiness":0.0346,"acousticness":0.721,"instrumentalness":0.104,"liveness":0.141,"valence":0.271,"tempo":122.544,"time_signature":4},"next year two door cinema club":{"danceability":0.731,"energy":0.736,"key":7,"loudness":-6.498,"mode":1,"speechiness":0.0478,"acousticness":0.28,"instrumentalness":0,"liveness":0.0913,"valence":0.383,"tempo":123.056,"time_signature":4},"filmic above and beyond":{"danceability":0.111,"energy":0.261,"key":5,"loudness":-15.167,"mode":1,"speechiness":0.0347,"acousticness":0.96,"instrumentalness":0.922,"liveness":0.191,"valence":0.0377,"tempo":86.599,"time_signature":5},"carousel #3 federico albanese":{"danceability":0.274,"energy":0.0419,"key":7,"loudness":-27.13,"mode":0,"speechiness":0.0414,"acousticness":0.964,"instrumentalness":0.923,"liveness":0.0805,"valence":0.0387,"tempo":120.902,"time_signature":4},"bruises chairlift":{"danceability":0.579,"energy":0.554,"key":0,"loudness":-7.08,"mode":1,"speechiness":0.0587,"acousticness":0.0175,"instrumentalness":0.0221,"liveness":0.101,"valence":0.831,"tempo":185.183,"time_signature":4},"have you ever seen the rain creedence clearwater revival":{"danceability":0.735,"energy":0.663,"key":0,"loudness":-6.883,"mode":1,"speechiness":0.0271,"acousticness":0.1,"instrumentalness":0.0000326,"liveness":0.105,"valence":0.791,"tempo":116.069,"time_signature":4},"it's gotta be you isaiah":{"danceability":0.433,"energy":0.745,"key":8,"loudness":-4.632,"mode":1,"speechiness":0.0377,"acousticness":0.221,"instrumentalness":0,"liveness":0.0981,"valence":0.586,"tempo":95.472,"time_signature":4},"colder heavens blanco white":{"danceability":0.383,"energy":0.547,"key":5,"loudness":-9.899,"mode":0,"speechiness":0.0376,"acousticness":0.771,"instrumentalness":0.00216,"liveness":0.0913,"valence":0.279,"tempo":91.899,"time_signature":4},"with or without you U2":{"danceability":0.543,"energy":0.432,"key":2,"loudness":-11.832,"mode":1,"speechiness":0.0288,"acousticness":0.000207,"instrumentalness":0.369,"liveness":0.146,"valence":0.102,"tempo":110.196,"time_signature":4},"don't look back in anger oasis":{"danceability":0.333,"energy":0.922,"key":0,"loudness":-4.087,"mode":1,"speechiness":0.0592,"acousticness":0.0596,"instrumentalness":0.00000205,"liveness":0.126,"valence":0.332,"tempo":162.978,"time_signature":4},"better with you austin mahone":{"danceability":0.778,"energy":0.559,"key":5,"loudness":-6.05,"mode":0,"speechiness":0.0477,"acousticness":0.557,"instrumentalness":0,"liveness":0.101,"valence":0.484,"tempo":99.973,"time_signature":4},"oceans away ARIZONA":{"danceability":0.617,"energy":0.642,"key":8,"loudness":-8.624,"mode":1,"speechiness":0.0334,"acousticness":0.13,"instrumentalness":0.157,"liveness":0.0929,"valence":0.236,"tempo":105.885,"time_signature":4}}
+    
+    var count = Object.keys(data).length;
+    console.log(count);console.log(data)
+
+
+    danceability_ar = []
+    energy_ar = []
+    key_ar = []
+    loudness_ar = []
+    mode_ar = []
+    speechiness_ar = []
+    acousticness_ar = []
+    instrumentalness_ar = []
+    liveness_ar = []
+    valence_ar = []
+    tempo_ar = []
+    time_signature_ar = []
+
+
+    //iterate over the JSON
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            //console.log("song -> " + key);
+
+            obj = data[key]
+            for(var innerkey in obj){
+                if(obj.hasOwnProperty(innerkey)){
+                    //console.log(innerkey + ' ->' + obj[innerkey])
+
+                    if(innerkey === 'danceability'){
+
+                        danceability_ar.push(obj[innerkey])
+
+                    }if(innerkey === 'energy'){
+                        
+                        energy_ar.push(obj[innerkey])
+
+                    }if(innerkey === 'key'){
+
+                        key_ar.push(obj[innerkey])
+                        
+                    }
+                    if(innerkey === 'loudness'){
+
+                        loudness_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'mode'){
+
+                        mode_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'speechiness'){
+
+                        speechiness_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'acousticness'){
+
+                        acousticness_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'instrumentalness'){
+
+                        instrumentalness_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'liveness'){
+
+                        liveness_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'valence'){
+
+                        valence_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'tempo'){
+
+                        tempo_ar.push(obj[innerkey])
+                        
+                    }if(innerkey === 'time_signature'){
+
+                        time_signature_ar.push(obj[innerkey])
+                        
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    console.log('danceability array-> ' + liveness_ar)
+
+    function createHist(id, data, data_low = 0, data_high = 1){
+
+        var formatCount = d3.format(",.0f");
+
+        var svg = d3.select("#" + id), 
+            margin = {top: 10, right: 30, bottom: 30, left: 30},
+            width = +svg.attr("width") - margin.left - margin.right,
+            height = +svg.attr("height") - margin.top - margin.bottom,
+            g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var x = d3.scaleLinear().domain([data_low,data_high])
+            .rangeRound([0, width]);
+
+        //console.log('x->' + x.ticks())
+
+       
+       var bins = d3.histogram()
+        .domain(x.domain())
+        .thresholds(x.ticks(20))
+        (data);
+       
+
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(bins, function(d) { return d.length; })])
+            .range([height, 0]);
+
+        var bar = g.selectAll(".bar")
+          .data(bins)
+          .enter().append("g")
+            .attr("class", "bar")
+            .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+
+        bar.append("rect")
+            .attr("x", 1)
+            .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+            .attr("height", function(d) { return height - y(d.length); });
+
+        bar.append("text")
+            .attr("dy", ".75em")
+            .attr("y", 6)
+            .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
+            .attr("text-anchor", "middle")
+            .text(function(d) { return formatCount(d.length); });
+
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+    }
+
+    createHist('danceability', danceability_ar)
+    createHist('energy', energy_ar)
+    createHist('key', key_ar)
+    createHist('loudness', loudness_ar, data_low = -60, data_high = 0)
+    createHist('mode', mode_ar)
+    createHist('speechiness', speechiness_ar)
+    createHist('acousticness', acousticness_ar)
+    createHist('instrumentalness', instrumentalness_ar)
+    createHist('liveness', liveness_ar)
+    createHist('valence', valence_ar)
+    createHist('tempo', tempo_ar, data_low = 0, data_high = 300)
+    createHist('time_signature', time_signature_ar, data_low = 1, data_high = 6)
+</script>
+    </body>
+</html>

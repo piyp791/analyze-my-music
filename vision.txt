@@ -1,0 +1,17 @@
+Vision
+
+What ?
+Create an app that takes in a list of songs/artists and give out musical preferences. Recommend artists and songs on the basis of preferences
+
+Why ?
+Its fun. 
+
+How ?
+Use Spotify for fetching track attributes.
+Use search API for fetching track IDS.
+ 
+Input/Output
+Take text file as input or songs directory . Format (song artist)
+Spit out a report of musical preferences. 
+bar graphs, charts, histograms
+recommend artists/songs

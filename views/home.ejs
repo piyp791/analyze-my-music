@@ -1,0 +1,318 @@
+<html>
+    <head>
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+        </head>
+
+         <style>
+
+            * {
+              -moz-box-sizing: border-box;
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+            }
+            .parent { 
+              max-width: 1500px; 
+              width: 100%; 
+              margin: 0 auto;
+              border: 1px solid black;
+              border-radius: 10px;
+              padding: 5px;
+            }
+            .row { 
+              width: 100%;
+              max-width: 1500px; 
+              letter-spacing: -0.31em;
+            }
+            .col1, .col2, .col3 { 
+              display: inline-block;
+              vertical-align: top;
+              text-align: center;
+              border: 1px solid black;
+              /*background: #ccc;*/
+              padding: 5px;
+              margin: 5px 0.5%;
+              letter-spacing: normal;
+            }
+            .col1 {
+              width: 32%;
+            }
+            .col2 {
+              width: 32%;
+            }
+            .col3 {
+              width: 32%;
+            }
+
+            .bar rect {
+              fill: steelblue;
+            }
+
+            .bar text {
+              fill: #fff;
+              font: 10px sans-serif;
+            }
+        </style>>
+
+        <body>
+            <form ref='uploadForm' 
+                id='uploadForm' 
+                action='http://localhost:3000/upload' 
+                method='post' 
+                encType="multipart/form-data">
+                    <input type="file" name="sampleFile" />
+                    <input type='submit' value='Upload!' />
+            </form>
+
+            <div>
+                <%if (JSON.stringify(response) != '{}') { %>
+                    <!--<p><%= JSON.stringify(response)%></p>-->
+
+                     <div class="parent">
+                        <div class="row">
+                          <div class="col1"><h3>Danceability</h3>
+                          </div>
+                          <div class="col2">
+                              <h3>Energy</h3>
+                          </div>
+                          <div class="col3">
+                              <h3>Key</h3>
+                           </div>
+                        </div>
+                        <div class="row">
+                          <div class="col1">
+                               <svg id="danceability" width="400" height="400"></svg>
+                          </div>
+                          <div class="col2">
+                               <svg id="energy" width="400" height="400"></svg>
+                          </div>
+                          <div class="col3">
+                                <svg id="key" width="400" height="400"></svg>
+                           </div>
+                        </div>
+                         <div class="row">
+                          <div class="col1"><h3>Loudness</h3>
+                          </div>
+                          <div class="col2">
+                              <h3>Mode</h3>
+                          </div>
+                          <div class="col3">
+                              <h3>Speechiness</h3>
+                           </div>
+                        </div>
+                        <div class="row">
+                          <div class="col1">
+                                <svg id="loudness" width="400" height="400"></svg>  
+                          </div>
+                          <div class="col2">
+                                <svg id="mode" width="400" height="400"></svg> 
+                          </div>
+                          <div class="col3">
+                              <svg id="speechiness" width="400" height="400"></svg> 
+                          </div>
+                        </div>
+                         <div class="row">
+                          <div class="col1"><h3>Acousticness</h3>
+                          </div>
+                          <div class="col2">
+                              <h3>Instrumentalness</h3>
+                          </div>
+                          <div class="col3">
+                              <h3>Liveness</h3>
+                           </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col1">
+                              <svg id="acousticness" width="400" height="400"></svg> 
+                          </div>
+                          <div class="col2">
+                              <svg id="instrumentalness" width="400" height="400"></svg> 
+                          </div>
+                          <div class="col3">
+                              <svg id="liveness" width="400" height="400"></svg> 
+                          </div>
+                        </div>
+
+                         <div class="row">
+                          <div class="col1"><h3>Valence</h3>
+                          </div>
+                          <div class="col2">
+                              <h3>Tempo</h3>
+                          </div>
+                          <div class="col3">
+                              <h3>Time signature</h3>
+                           </div>
+                        </div>
+                        <div class="row">
+                          <div class="col1">
+                              <svg id="valence" width="400" height="400"></svg> 
+                          </div>
+                          <div class="col2">
+                              <svg id="tempo" width="400" height="400"></svg> 
+                          </div>
+                          <div class="col3">
+                              <svg id="time_signature" width="400" height="400"></svg> 
+                          </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        populateArrays(<%-JSON.stringify(response)%>);
+                        //console.log('response-->',  <!% response %> )
+
+
+                        function populateArrays(data){
+
+
+                            danceability_ar = []
+                            energy_ar = []
+                            key_ar = []
+                            loudness_ar = []
+                            mode_ar = []
+                            speechiness_ar = []
+                            acousticness_ar = []
+                            instrumentalness_ar = []
+                            liveness_ar = []
+                            valence_ar = []
+                            tempo_ar = []
+                            time_signature_ar = []
+                             //iterate over the JSON
+                            for (var key in data) {
+                                if (data.hasOwnProperty(key)) {
+                                    //console.log("song -> " + key);
+
+                                    obj = data[key]
+                                    for(var innerkey in obj){
+                                        if(obj.hasOwnProperty(innerkey)){
+                                            //console.log(innerkey + ' ->' + obj[innerkey])
+
+                                            if(innerkey === 'danceability'){
+
+                                                danceability_ar.push(obj[innerkey])
+
+                                            }if(innerkey === 'energy'){
+                                                
+                                                energy_ar.push(obj[innerkey])
+
+                                            }if(innerkey === 'key'){
+
+                                                key_ar.push(obj[innerkey])
+                                                
+                                            }
+                                            if(innerkey === 'loudness'){
+
+                                                loudness_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'mode'){
+
+                                                mode_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'speechiness'){
+
+                                                speechiness_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'acousticness'){
+
+                                                acousticness_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'instrumentalness'){
+
+                                                instrumentalness_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'liveness'){
+
+                                                liveness_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'valence'){
+
+                                                valence_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'tempo'){
+
+                                                tempo_ar.push(obj[innerkey])
+                                                
+                                            }if(innerkey === 'time_signature'){
+
+                                                time_signature_ar.push(obj[innerkey])
+                                                
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                        
+
+
+                        function createHist(id, data, data_low = 0, data_high = 1){
+
+                            var formatCount = d3.format(",.0f");
+
+                            var svg = d3.select("#" + id), 
+                                margin = {top: 10, right: 30, bottom: 30, left: 30},
+                                width = +svg.attr("width") - margin.left - margin.right,
+                                height = +svg.attr("height") - margin.top - margin.bottom,
+                                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                            var x = d3.scaleLinear().domain([data_low,data_high])
+                                .rangeRound([0, width]);
+
+                            //console.log('x->' + x.ticks())
+
+                           
+                           var bins = d3.histogram()
+                            .domain(x.domain())
+                            .thresholds(x.ticks(20))
+                            (data);
+                           
+
+                            var y = d3.scaleLinear()
+                                .domain([0, d3.max(bins, function(d) { return d.length; })])
+                                .range([height, 0]);
+
+                            var bar = g.selectAll(".bar")
+                              .data(bins)
+                              .enter().append("g")
+                                .attr("class", "bar")
+                                .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; });
+
+                            bar.append("rect")
+                                .attr("x", 1)
+                                .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+                                .attr("height", function(d) { return height - y(d.length); });
+
+                            bar.append("text")
+                                .attr("dy", ".75em")
+                                .attr("y", 6)
+                                .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
+                                .attr("text-anchor", "middle")
+                                .text(function(d) { return formatCount(d.length); });
+
+                            g.append("g")
+                                .attr("class", "axis axis--x")
+                                .attr("transform", "translate(0," + height + ")")
+                                .call(d3.axisBottom(x));
+                        }
+
+                        createHist('danceability', danceability_ar)
+                        createHist('energy', energy_ar)
+                        createHist('key', key_ar)
+                        createHist('loudness', loudness_ar, data_low = -60, data_high = 0)
+                        createHist('mode', mode_ar)
+                        createHist('speechiness', speechiness_ar)
+                        createHist('acousticness', acousticness_ar)
+                        createHist('instrumentalness', instrumentalness_ar)
+                        createHist('liveness', liveness_ar)
+                        createHist('valence', valence_ar)
+                        createHist('tempo', tempo_ar, data_low = 0, data_high = 300)
+                        createHist('time_signature', time_signature_ar, data_low = 1, data_high = 6)
+                    </script>>
+
+                <% } %>
+            </div>
+
+    </body>
+</html>
