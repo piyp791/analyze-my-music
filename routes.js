@@ -19,19 +19,39 @@ var fs = require('fs-extra');       //File System - for file manipulation
 var path = require('path');
 var _ = require('lodash'); 
 
+
 var getGenreInfo = async (function(query){
 
   console.log("getting genre info for query: " + query)
   
   //Get info from spotify
+  var trackInfo = {}
   var spotifyTrackIDInfo = await (api_util.getTrackIdFromSpotify(query));
+  //console.log('spotify track ID info for query ' +query + ' -->' +JSON.stringify(spotifyTrackIDInfo))
   var spotifyTrackID = spotifyTrackIDInfo.body.tracks.items[0].id
-  console.log('spotify track id info-->' +JSON.stringify(spotifyTrackID));
+  //console.log('spotify track id info-->' +JSON.stringify(spotifyTrackID));
 
   var spotifyTrackInfo = await (api_util.getMusicInfoFromSpotify(spotifyTrackID));
   //console.log('spotify music info -->' +JSON.stringify(spotifyTrackInfo));
+  trackInfo.spotifyInfo = spotifyTrackInfo
 
-  return spotifyTrackInfo;
+  var lastFMTrackIDInfo = await (api_util.getTrackIdFromLastFM(query));
+  console.log('track id info ->' + lastFMTrackIDInfo)
+
+  var lastfmTags = await (api_util.getTagsFromLastFM(lastFMTrackIDInfo));
+
+  var tags = []
+  for(var i=0;i< lastfmTags.length;i++){
+    console.log('tags -->' +lastfmTags[i].name)
+    if(lastfmTags[i].name && lastfmTags[i].name!=undefined && misc_util.filterTags(lastfmTags[i].name) == 'True'){
+      tags.push(lastfmTags[i].name)  
+    }
+    
+  }
+
+  trackInfo.tags = tags      
+  //console.log('track info -->' +JSON.stringify(trackInfo));
+  return trackInfo
 
 });
 
@@ -77,6 +97,8 @@ module.exports = function(app) {
               on('close', function(err){
 
                 //send the results back to the 
+
+                var counter = 0
                 totalQuery = queryArr.length
 
                 processedQuery = 0
@@ -84,10 +106,19 @@ module.exports = function(app) {
                   console.log('Processing query -->' + query)
                    getGenreInfo(query).then(function(genreObj){
                    
-                    genreObj = misc_util.extractInfo(genreObj.body)
-                    console.log('genre object-->' + JSON.stringify(genreObj))
-                    results[query] = genreObj
+                    spotifyObj = misc_util.extractInfo(genreObj.spotifyInfo.body)
+                    tagObj = genreObj.tags
 
+
+                    var finalObj = {}
+                    finalObj.genreInfo = spotifyObj
+                    finalObj.tagInfo = tagObj
+
+                    //console.log('genre object-->' + JSON.stringify(spotifyObj))
+                    //console.log('tags-->' + tagObj)
+                    results[query] = finalObj
+                    counter+=1
+                    console.log('*****************processed ************ ' + counter)
 
                     processedQuery ++
                     if(totalQuery == processedQuery){
@@ -112,7 +143,7 @@ module.exports = function(app) {
 
                     }
 
-                    console.log('Something went wrong -->'+ err)
+                    console.log('Something went wrong with getting genreinfo for ' + query + ' -->' +err)
                    
                   })
 

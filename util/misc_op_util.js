@@ -1,5 +1,6 @@
 var conf = require('../config');
 var async = require('async');
+var querystring = require('querystring')
 
 module.exports = {
 
@@ -57,6 +58,32 @@ module.exports = {
     }
     
     return preparedJson
+  },
+
+  encodeUrl: function(urlStr){
+
+    //return encodeURI(urlStr)
+    urlStr = querystring.escape(urlStr);
+    return urlStr
+
+  },
+
+  filterTags: function(tag){
+
+    tags = ['metal', 'popsoft', 'rock', 'classic rock', 'jazz', 'blues', 'classical', 'folk', 'country', 'edm', 'progressive rock', 'punk rock', 'rap', 'hip hop', 'easy listening', 
+    'alternative', 'indie', 'british','american', '60s', '70s', '80s', '90s', '50s', 'electronic', 'electronica', 'acoustic', 'oldies', 'party', 'live']
+
+    tag = tag.toLowerCase();
+
+    for (var i=0;i<tags.length;i++){
+
+      if(tags[i].includes(tag) || tag.includes(tags[i])){
+        return 'True'
+      }
+    }
+
+    return 'False'
+
   }
 }
 

@@ -10,97 +10,7 @@ var spotifyApi = new SpotifyWebApi(conf.spotify.credentials);
 
 module.exports = {
 
-	getGenreFromDeezer:function(metadata){
-
-		console.log('get genre from getGenreFromDeezer function called')		
-		
-		try{
-			//metadata = null
-			var deezerGenreIdList = metadata.external_metadata.deezer.genres 
-		}catch(ex){
-			console.log(ex)
-			//throw new Error('Error accessing deezer genre list from metadata' +ex.message)
-		}
-		
-  		//console.log('deezer genre id list-->' +JSON.stringify(deezerGenreIdList));
-
-		var genreList = "";
-
-		return new Promise(function(resolve, reject){
-			async.each(deezerGenreIdList, iterator, done); 
-		
-			//:-->TBD: separate these out of this module.
-			function iterator(jsonId, callback){
-
-				//console.log('iterator called with json id ' +JSON.stringify(jsonId))
-				var genreId = jsonId.id
-				var host = conf.deezer.apiHomeEndpoint + conf.deezer.genreEndPoint;  //-->TBD :split config file 
-				var url = host + genreId;
-
-				http_util.fetchHttpResponse(url).then(function(body){
-
-					try{
-						var genre_name = misc_util.buildString(body).name
-						genreList+=genre_name
-						//console.log('genre list-->' +genreList)
-					}catch(ex){
-						console.log('Deezer Error:: Some error occured while building genre string :' +ex.message)
-					}
-					
-					callback();
-				});
-			}
-
-			function done(err){
-				if(err) reject(err)
-				
-				resolve(genreList)		
-			}
-		})
-	},
-
-	getGenreFromWikipedia:function(metadata, cb){
-
-		console.log('get genre from getGenreFromWikipedia function called')
-		try{
-			var songName = metadata.title;
-			var artistList = metadata.artists;
-
-			//console.log('song name->' +songName + ' artist name' + JSON.stringify(artistList));
-
-			artistNameStr = "";
-			for(var i in artistList){
-				artistNameStr = artistNameStr + "," + artistList[i].name;
-			}
-
-			artistNameStr = artistNameStr.substring(1);
-
-			//console.log('artist name string --->' + artistNameStr)
-
-			var pyScriptArgStr = songName + " " + artistNameStr
-
-			//console.log('arguments to python script-->' +pyScriptArgStr)
 	
-		}catch(ex){
-			console.log(ex)
-			//throw new Error('Wikipedia data pre processing error')
-		}
-		
-		var options = {
-  			mode: 'text',
-  			args: [pyScriptArgStr]
-  			//args: ['Stairway to Heaven Led Zeppelin']
-		};
-
-		return new Promise(function(resolve, reject){
-			misc_util.executePythonScript('wikipedia.py', options).then(function(results){
-				resolve(results)
-			});
-		});
-		
-	
-	},
-
 	getMusicInfoFromSpotify: function(metadata){
 
 		//console.log('get genre from getMusicInfoFromSpotify function called with parameters' + JSON.stringify(metadata));
@@ -147,8 +57,6 @@ module.exports = {
 		})
 	},
 
-
-
 	getTrackIdFromSpotify: function(query){
 
 		console.log('get track id FromSpotify function called');
@@ -183,37 +91,31 @@ module.exports = {
 	},
 
 
+	getTrackIdFromLastFM: function(query){
 
-	getTagsFromLastFM: function(metadata){
-
-		console.log('get genre from getTagsFromLastFM function called');
-
+		console.log('get track id From LastFM function called');
+		
+	
 		var host = conf.lastfm.apiHomeEndpoint;
 
+		query = misc_util.encodeUrl(query)
+
 		try{
-			var songName = metadata.title;
-			var artistList = metadata.artists;
-			var artistNameStr = "";
-			for(var i in artistList){
-				artistNameStr = artistNameStr + "," + artistList[i].name;
-			}
-
-			artistNameStr = artistNameStr.substring(1);
-			//console.log('artist name string --->' + artistNameStr)
-
-			var method = conf.lastfm.keyWordValueMapping.METHOD + '=' + conf.lastfm.keyWordValueMapping.GET_TRACK_INFO_METHOD;
+			
+			var songName = query
+			var method = conf.lastfm.keyWordValueMapping.METHOD + '=' + conf.lastfm.keyWordValueMapping.SEARCH_TRACK_METHOD;
 			//console.log('get info track method -->' + method)
 
 			var apiKey = conf.lastfm.credentials.apikey;
 
 			url = host + conf.urlOptions.urlParamDelimiter + 
-			conf.lastfm.keyWordValueMapping.GET_TRACK_INFO_METHOD + conf.urlOptions.paramDelimiter + 
-			conf.lastfm.keyWordValueMapping.ARTIST + '=' + artistNameStr + conf.urlOptions.paramDelimiter + 
+			conf.lastfm.keyWordValueMapping.SEARCH_TRACK_METHOD + conf.urlOptions.paramDelimiter +  
 			conf.lastfm.keyWordValueMapping.TRACK + '=' + songName + conf.urlOptions.paramDelimiter + 
 			conf.lastfm.keyWordValueMapping.API_KEY + '=' + conf.lastfm.credentials.apikey + conf.urlOptions.paramDelimiter + 
 			conf.lastfm.keyWordValueMapping.JSON_FORMAT;
 
-			//console.log('url-->' + url)
+
+			console.log('url-->' + url)
 		}catch(ex){
 			console.log('Preprocessing error-->' +ex)
 			//throw new Error('Preprocessing Error Lastfm->' +ex)
@@ -223,18 +125,84 @@ module.exports = {
 			
 			http_util.fetchHttpResponse(url).then(function(body){
 
-				var toptags = misc_util.buildString(body).track.toptags.tag;
-				resolve(toptags)
+				mbid = ''
+
+				var results_ar = misc_util.buildString(body).results.trackmatches.track
+				console.log('results array -->' + results_ar.length)
+				for (var i=0;i<results_ar.length;i++){
+					var result = results_ar[i]
+					if(result.mbid != '' && result.mbid.length>0){
+						mbid = result.mbid
+						break
+					}
+				}
+				if(mbid == ''){
+					mbid = 'None'
+				}
+				console.log('mbid -->', mbid)
+				resolve(mbid)
+			})
+			.catch(function(err){
+				console.log('some error')
+				resolve('None')
 			});
 		
 		})
 
 	},
 
-	getResults: function(){
-		console.log('get results')
-	}
+	getTagsFromLastFM: function(trackID){
 
+		//trackID = '985609ad-0cd2-4355-8ae9-b3e04442fca7'
+
+		console.log('get genre from getTagsFromLastFM function called');
+
+		var host = conf.lastfm.apiHomeEndpoint;
+
+		try{
+			
+			var method = conf.lastfm.keyWordValueMapping.METHOD + '=' + conf.lastfm.keyWordValueMapping.GET_TRACK_INFO_METHOD;
+			//console.log('get info track method -->' + method)
+
+			var apiKey = conf.lastfm.credentials.apikey;
+
+			url = host + conf.urlOptions.urlParamDelimiter + 
+			conf.lastfm.keyWordValueMapping.GET_TRACK_INFO_METHOD + conf.urlOptions.paramDelimiter + 
+			conf.lastfm.keyWordValueMapping.MBID + '=' + trackID + conf.urlOptions.paramDelimiter + 
+			conf.lastfm.keyWordValueMapping.API_KEY + '=' + conf.lastfm.credentials.apikey + conf.urlOptions.paramDelimiter + 
+			conf.lastfm.keyWordValueMapping.JSON_FORMAT;
+
+			console.log('url-->' + url)
+		}catch(ex){
+			console.log('Preprocessing error-->' +ex)
+			//throw new Error('Preprocessing Error Lastfm->' +ex)
+		}
+
+		return new Promise(function(resolve, reject){
+		
+			console.log('track id -->' +trackID)
+			if(trackID!='None'){
+
+				http_util.fetchHttpResponse(url).then(function(body){
+
+				
+					var toptags = misc_util.buildString(body).track.toptags.tag;
+					resolve(toptags)
+
+				});
+
+			}else{
+				console.log('resolved with None')
+				resolve('None')
+			}
+			
+
+		}, function(err){
+			console.log('error while fetching tags -->' + err)
+			reject('None')
+		});
+
+	}
 }
 
 

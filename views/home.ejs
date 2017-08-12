@@ -42,6 +42,13 @@
             .col3 {
               width: 32%;
             }
+            .col4 {
+                width:100%;
+                text-align: center;
+                display: inline-block;
+                letter-spacing: normal;
+            }
+
 
             .bar rect {
               fill: steelblue;
@@ -51,7 +58,7 @@
               fill: #fff;
               font: 10px sans-serif;
             }
-        </style>>
+        </style>
 
         <body>
             <form ref='uploadForm' 
@@ -65,7 +72,7 @@
 
             <div>
                 <%if (JSON.stringify(response) != '{}') { %>
-                    <!--<p><%= JSON.stringify(response)%></p>-->
+                    <p><%= JSON.stringify(response)%></p>
 
                      <div class="parent">
                         <div class="row">
@@ -154,11 +161,16 @@
                               <svg id="time_signature" width="400" height="400"></svg> 
                           </div>
                         </div>
-                    </div>
+
+                         <div class="row">
+                           <div class="col4">
+                              <p id="tags"></p> 
+                          </div>
+                        </div>
 
                     <script>
                         populateArrays(<%-JSON.stringify(response)%>);
-                        //console.log('response-->',  <!% response %> )
+                        //console.log('response-->'+  JSON.stringify(response))
 
 
                         function populateArrays(data){
@@ -181,60 +193,87 @@
                                 if (data.hasOwnProperty(key)) {
                                     //console.log("song -> " + key);
 
-                                    obj = data[key]
-                                    for(var innerkey in obj){
-                                        if(obj.hasOwnProperty(innerkey)){
-                                            //console.log(innerkey + ' ->' + obj[innerkey])
+                                    outerObj = data[key]
+                                    for(var outerKey in outerObj){
+                                        if(outerObj.hasOwnProperty(outerKey)){
 
-                                            if(innerkey === 'danceability'){
 
-                                                danceability_ar.push(obj[innerkey])
+                                            obj = outerObj[outerKey]
+                                            if(outerKey == 'genreInfo'){
 
-                                            }if(innerkey === 'energy'){
+                                                for(var innerkey in obj){
+                                                    
+                                                    if(obj.hasOwnProperty(innerkey)){
+
+                                                     //console.log(innerkey + ' ->' + obj[innerkey])
+
+                                                        if(innerkey === 'danceability'){
+
+                                                            danceability_ar.push(obj[innerkey])
+
+                                                        }if(innerkey === 'energy'){
+                                                            
+                                                            energy_ar.push(obj[innerkey])
+
+                                                        }if(innerkey === 'key'){
+
+                                                            key_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'loudness'){
+
+                                                            loudness_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'mode'){
+
+                                                            mode_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'speechiness'){
+
+                                                            speechiness_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'acousticness'){
+
+                                                            acousticness_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'instrumentalness'){
+
+                                                            instrumentalness_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'liveness'){
+
+                                                            liveness_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'valence'){
+
+                                                            valence_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'tempo'){
+
+                                                            tempo_ar.push(obj[innerkey])
+                                                            
+                                                        }if(innerkey === 'time_signature'){
+
+                                                            time_signature_ar.push(obj[innerkey])
+                                                            
+                                                        }
+
+                                                    }                                                
+                                                } 
+
+                                            }else if(outerKey == 'tagInfo'){
+
+                                                console.log(JSON.stringify(obj))
                                                 
-                                                energy_ar.push(obj[innerkey])
+                                                tags = obj
+                                                console.log('tag info-->' +JSON.stringify(tags))
 
-                                            }if(innerkey === 'key'){
 
-                                                key_ar.push(obj[innerkey])
-                                                
-                                            }
-                                            if(innerkey === 'loudness'){
+                                                var tagArea= document.getElementById("tags");
+                                                //console.log('tagArea->' +  tagArea)
+                                                if(tags && tags!=[] && tags.length>0){
+                                                    tagArea.innerHTML += tags + ","    
+                                                }
 
-                                                loudness_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'mode'){
-
-                                                mode_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'speechiness'){
-
-                                                speechiness_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'acousticness'){
-
-                                                acousticness_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'instrumentalness'){
-
-                                                instrumentalness_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'liveness'){
-
-                                                liveness_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'valence'){
-
-                                                valence_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'tempo'){
-
-                                                tempo_ar.push(obj[innerkey])
-                                                
-                                            }if(innerkey === 'time_signature'){
-
-                                                time_signature_ar.push(obj[innerkey])
-                                                
                                             }
 
                                         }
@@ -245,8 +284,6 @@
                         }
 
                         
-
-
                         function createHist(id, data, data_low = 0, data_high = 1){
 
                             var formatCount = d3.format(",.0f");
@@ -299,7 +336,7 @@
 
                         createHist('danceability', danceability_ar)
                         createHist('energy', energy_ar)
-                        createHist('key', key_ar)
+                        createHist('key', key_ar, data_low = 0, data_high = 11)
                         createHist('loudness', loudness_ar, data_low = -60, data_high = 0)
                         createHist('mode', mode_ar)
                         createHist('speechiness', speechiness_ar)
