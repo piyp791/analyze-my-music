@@ -14,15 +14,17 @@ Sample text files are present in the /sample_subject_preferences folder.
 
 ## Screnshots
 
-![results visualization](/images/results1.png, "Results Visualization")
 
-![results visualization](/images/results2.png, "Results Visualization")
 
-![results visualization](/images/results3.png, "Results Visualization")
+![results visualization](./images/results1.png)
 
-![results visualization](/images/results4.png, "Results Visualization")
+![results visualization](./images/results2.png)
 
-![songs genre tags](/images/results5.png, "Songs genre Tags")
+![results visualization](./images/results3.png)
+
+![results visualization](./images/results4.png)
+
+![songs genre tags](./images/results5.png)
 
 ## Future work
 
