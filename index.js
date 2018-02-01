@@ -23,7 +23,7 @@ app.listen({
 // handle HTTP GET request to the "/" URL
 app.get('/', function(req, res) {
 
-	res.render('home.ejs', {response : {}});  
+	res.render('index.ejs');  
  
 })
 
