@@ -14,7 +14,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
 var routes = require('./routes')(app); 
-app.listen(3000, function(){
+app.listen({
+  port: process.env.PORT || 3000
+}, function(){
 	console.log('App server listening on port 3000');
 });
  
