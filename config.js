@@ -12,8 +12,8 @@ module.exports = {
 	spotify:{
 		credentials:{
 			
-			clientId : 'aeda8e473342414b8c919fddf52f24c3',
-			clientSecret : 'f132559b2e5e4a6c9bcc383aafc7a2e5',
+			clientId : '<Your Spotify Client ID>',
+			clientSecret : '<Your Spotify Client Secret>',
 			redirectUri : 'http://localhost:3000/callback/'
 		}
 	},
