@@ -9,10 +9,11 @@ along with genre tags obtained from [LastFM's API](https://www.last.fm/api/show/
 2. Run the 
 ``npm install`` command in the command line to install the dependencies.
 3. Create a Spotify application using instructions from [this](https://developer.spotify.com/documentation/general/guides/app-settings/#register-your-app) link.
-4. Get the client ID and client scret that you would need for accessing the Spotify endpoints.
+4. Get the client ID and client secret that you would need for accessing the Spotify endpoints.
 5. Modify the ```config.js``` file and enter your Spotify client ID and client secret.
-3. Open the URL ``localhost:3000`` in the browser.
-4. Upload a text file with the music library details i.e. song names along with the artist names.
+6. Start the nodejs server by executing the command ```node index.js```
+7. Open the URL ``localhost:3000`` in the browser.
+8. Upload a text file with the music library details i.e. song names along with the artist names.
 Sample text files are present in the /sample_subject_preferences folder.
 
 ## Screnshots
